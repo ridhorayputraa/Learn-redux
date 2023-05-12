@@ -1,11 +1,9 @@
-
-import './App.css'
-import TodoList from './features/todos/TodoList'
+import React from "react";
+import "./App.css";
+import TodoList from "./features/todos/TodoList";
 
 function App() {
-  return (
-    <TodoList/>
-  )
+  return <TodoList />;
 }
 
-export default App
+export default App;
