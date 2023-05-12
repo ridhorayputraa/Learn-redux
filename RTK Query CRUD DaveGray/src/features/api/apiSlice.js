@@ -40,29 +40,35 @@ export const apiSlice = createApi({
     getTodos: builder.query({
       query: () => "/todos",
     }),
+
+    // Adding mutation
+    // Untuk mengirim data update
     addTodo: builder.mutation({
       query: (todo) => ({
         url: "/todos",
         method: "POST",
         body: todo,
       }),
-      invalidatesTags: ["Todos"],
     }),
-    updateTodo: builder.mutation({
+
+    // Update
+    UpdateTodo: builder.mutation({
       query: (todo) => ({
         url: `/todos/${todo.id}`,
+        // Put ketika ketika replasing full record
+        // Patch ketika hanya update record nya aja
         method: "PATCH",
         body: todo,
       }),
-      invalidatesTags: ["Todos"],
     }),
+
+    // Delete
     deleteTodo: builder.mutation({
       query: ({ id }) => ({
         url: `/todos/${id}`,
         method: "DELETE",
         body: id,
       }),
-      invalidatesTags: ["Todos"],
     }),
   }),
 });

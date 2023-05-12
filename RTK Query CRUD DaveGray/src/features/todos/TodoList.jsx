@@ -8,7 +8,13 @@ import { useState } from "react";
 const TodoList = () => {
   const [newTodo, setNewTodo] = useState("");
 
-  const { data: todos, error, isLoading } = useGetTodosQuery();
+  const {
+    data: todos,
+    isSuccess,
+    isError,
+    error,
+    isLoading,
+  } = useGetTodosQuery();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,13 +41,20 @@ const TodoList = () => {
   );
 
   let content;
+
   // Define conditional content
   if (isLoading) {
     <p>Loading....</p>;
   }
-  if (error) {
-    console.log(error);
-    content = <p>{error}</p>;
+  if (!isSuccess && isError) {
+    console.log(isError);
+    content = (
+      <div>
+        {error.status} {JSON.stringify(error.data)}
+      </div>
+    );
+    content = <p>Eror</p>;
+    content = error;
   }
 
   content = JSON.stringify(todos);
