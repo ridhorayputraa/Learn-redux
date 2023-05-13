@@ -1,44 +1,18 @@
-// import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query";
-
-// export const apiSlice = createApi({
-//   reducerPath: "api",
-//   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3500" }),
-//   endpoints: (builder) => ({
-//     getTodos: builder.query({
-//       // anonymous function
-//       // request semua todos pake http get method
-//       query: () => "/todos",
-//     }),
-//   }),
-// });
-
-// // Export hooks for usage in functional components, which are
-// // auto-generated based on the defined endpoints
-// export const { useGetTodosQuery } = apiSlice;
-
-// import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query";
-
-// export const apiSlice = createApi({
-//   reducerPath: "api",
-//   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3500" }),
-//   endpoints: (builder) => ({
-//     getTodos: builder.query({
-//       query: () => "/todos",
-//     }),
-//   })
-// })
-
-// export const { useGetTodosQuery } = apiSlice
-
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3500" }),
+  // Cache Tags and Automated re-fetching
+  tagTypes: ["Todos"],
 
   endpoints: (builder) => ({
     getTodos: builder.query({
       query: () => "/todos",
+      // TransformResponse biar nge list nya bener cuuy (data terakhir kali di tambahkan)
+      transformResponse: res => res.sort((a,b) => b.id - a.id),
+      // Providing cache data
+      providesTags: ["Todos"],
     }),
 
     // Adding mutation
@@ -49,6 +23,9 @@ export const apiSlice = createApi({
         method: "POST",
         body: todo,
       }),
+      // Invalidating cache data
+      // for Data mutation
+      invalidatesTags: ["Todos"],
     }),
 
     // Update
@@ -60,6 +37,7 @@ export const apiSlice = createApi({
         method: "PATCH",
         body: todo,
       }),
+      invalidatesTags: ["Todos"],
     }),
 
     // Delete
@@ -69,6 +47,9 @@ export const apiSlice = createApi({
         method: "DELETE",
         body: id,
       }),
+      // For auto re-fetching 
+      invalidatesTags: ["Todos"],
+
     }),
   }),
 });
