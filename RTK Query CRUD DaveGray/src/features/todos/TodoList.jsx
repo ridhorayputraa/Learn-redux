@@ -1,6 +1,11 @@
 // add imports
 import React from "react";
-import { useGetTodosQuery } from "../api/apiSlice";
+import {
+  useGetTodosQuery,
+  useAddTodoMutation,
+  useUpdateTodoMutation,
+  useDeleteTodoMutation,
+} from "../api/apiSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
@@ -15,6 +20,11 @@ const TodoList = () => {
     error,
     isLoading,
   } = useGetTodosQuery();
+
+  //   import Custom Hook
+  const [addTodo] = useAddTodoMutation();
+  const [updateTodo] = useUpdateTodoMutation();
+  const [deleteTodo] = useDeleteTodoMutation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
