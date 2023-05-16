@@ -1,4 +1,9 @@
-import { useGetTodosQuery } from "../../api/apiSlice";
+import {
+  useAddTodoMutation,
+  useDeleteTodoMutation,
+  useGetTodosQuery,
+  useUpdateTodoMutation,
+} from "../../api/apiSlice";
 
 import * as React from "react";
 import { styled } from "@mui/material/styles";
@@ -9,6 +14,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { useState } from "react";
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+import { faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,7 +60,13 @@ const rows = [
 ];
 
 export default function TodoList() {
+  const [newTodo, setNewTodo] = useState("");
+
   const { data: todos, isSuccess, error, isLoading } = useGetTodosQuery();
+  const [addTodo] = useAddTodoMutation();
+  // const [updateTodo] = useUpdateTodoMutation();
+  const [deleteTodo] = useDeleteTodoMutation();
+
   let content;
   if (isLoading) {
     content = <p>Loading....</p>;
@@ -63,8 +80,21 @@ export default function TodoList() {
         <StyledTableCell>
           {todo.completed == true ? "Sudah kelar" : "Belom"}
         </StyledTableCell>
+        <StyledTableCell>
+          <button className="trash" onClick={() => deleteTodo({ id: todo.id })}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </StyledTableCell>
       </StyledTableRow>
     ));
+  } else if (error) {
+    content = (
+      <TableBody>
+        <div>
+          <p>error ngab</p>
+        </div>
+      </TableBody>
+    );
   }
   return (
     <TableContainer component={Paper}>
@@ -74,6 +104,7 @@ export default function TodoList() {
             <StyledTableCell>Id</StyledTableCell>
             <StyledTableCell>Title</StyledTableCell>
             <StyledTableCell>Completed</StyledTableCell>
+            <StyledTableCell>Trash</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>{content}</TableBody>
